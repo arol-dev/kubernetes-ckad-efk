@@ -42,7 +42,23 @@ Verifica que los pods estén corriendo:
 kubectl get pods -n kube-system
 ```
 
-## Paso 2: Instalación Declarativa del Stack EFK
+## Paso 2: Instalación de la Aplicación Flask con Helm
+
+### Instalación
+
+Instala la aplicación Flask en el namespace `elastic` con Helm:
+
+   ```bash
+   helm install flask-web ./FLASK-WEB-APP -f ./FLASK-WEB-APP/valuesServiceA.yaml -n elastic
+   ```
+
+### Verificación
+Verifica que la instalación se haya realizado correctamente:
+```bash
+kubectl get pods -n elastic
+```
+
+## Paso 3: Instalación Declarativa del Stack EFK
 
 ### Crear Namespace
 Crea un namespace por el Stack EFK:
@@ -79,7 +95,7 @@ Verifica que las instalaciones se hayan realizado correctamente:
 kubectl get pods -n elastic
 ```
 
-## Paso 3: Instalación Declarativa de Metricbeat
+## Paso 4: Instalación Declarativa de Metricbeat
 
 ### Instalación
 
@@ -95,36 +111,20 @@ Verifica que la instalación se haya realizado correctamente:
 kubectl get pods -n kube-system
 ```
 
-## Paso 4: Instalación de la Aplicación Fluck con Helm
-
-### Instalación
-
-Instala Metricbeat en el namespace kube-system:
-Aplica el manifiesto `metricbeat-daemonset.yaml`:
-   ```bash
-   kubectl apply -f metricbeat-daemonset.yaml
-   ```
-
-### Verificación
-Verifica que la instalación se haya realizado correctamente:
-```bash
-kubectl get pods -n kube-system
-```
-
-## Paso 4: Conexión a Kibana
+## Paso 5: Conexión a Kibana
 
 ### Habilitar Port Forwarding
 Habilita el port-forwarding para acceder a Kibana:
 ```bash
-kubectl port-forward service/kibana-kibana 5601:5601 -n elastic
+kubectl port-forward service/kibana 5601:5601 -n elastic
 ```
 
 ### Acceder a Kibana
 Abre un navegador y dirígete a: [http://localhost:5601](http://localhost:5601)
 
-## Paso 5: Configuración de Index Patterns en Kibana
+## Paso 6: Configuración de Index Patterns en Kibana
 
-1. Dirígete a **Stack Management** en Kibana.
+1. Desde el menú principal en la parte superior izquierda, dirígete a **Stack Management** en Kibana.
 2. En **Kibana/Index Patterns**, crea dos index patterns:
    - `fluentd*`
    - `metricbeat*`
@@ -132,14 +132,15 @@ Abre un navegador y dirígete a: [http://localhost:5601](http://localhost:5601)
 ## Paso 6: Visualización y Dashboard en Kibana
 
 ### Logs Discovery
-1. Ve a la sección **Discover** en el menú principal.
-2. Agrega un filtro para `kubernetes.pod_name` igual a "nombre del pod del servicio".
+1. En el menú principal, ve a **Discover**.
+2. Agrega un filtro para `kubernetes.pod_name` igual a `<nombre del pod aplicación Flask>`. Desplegado en el paso 2.
+4. Para ver más logs, abre un port-forwarding al servidor Flask:
 
-### Port Forward al Servicio Flask
-Habilita el port-forwarding al servicio Flask:
-```bash
-kubectl port-forward service/<nombre_del_servicio> 5000:5000
-```
+   ```bash
+   kubectl port-forward svc/flask 5000:5000 -n elastic
+   ```
+
+5. Realiza unas solicitudes HTTP al servidor Flask y verifica en Kibana cómo los logs se registran automáticamente.
 
 ### Visualizaciones
 1. Crea una visualización de tipo **TSVB**:
@@ -166,11 +167,3 @@ Con estos pasos, has configurado un entorno completo de monitoreo y análisis de
 - [Documentación de Kibana](https://www.elastic.co/guide/en/kibana/current/index.html)
 - [Documentación de Metricbeat](https://www.elastic.co/guide/en/beats/metricbeat/current/index.html)
 ```
-
-### Descarga del archivo README.md
-
-He creado el archivo `README.md` con el contenido profesionalizado. Puedes descargarlo a continuación:
-
-[Descargar README.md](sandbox:/mnt/data/README.md) 
-
-Por favor, hazme saber si necesitas algún ajuste o información adicional.

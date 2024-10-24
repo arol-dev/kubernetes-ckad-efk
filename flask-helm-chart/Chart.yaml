@@ -1,6 +1,0 @@
-# efk-demo-chart/Chart.yaml
-
-apiVersion: v2
-name: efk-demo-chart
-description: A Helm chart for the EFK (Elasticseach, Fluentd, Kibana) demo
-version: 0.1.0

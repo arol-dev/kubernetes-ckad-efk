@@ -1,0 +1,4 @@
+apiVersion: v1
+name: flask-app
+description: A Helm chart for the EFK (Elasticseach, Fluentd, Kibana) demo
+version: 1.0.0

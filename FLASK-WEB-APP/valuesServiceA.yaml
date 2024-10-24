@@ -1,7 +1,7 @@
 replicaCount: 1
 
 image:
-  repository: marcoglorioso/efk-demo-service-b
+  repository: marcoglorioso/efk-demo-service-a
   tag: 1.0.0
   pullPolicy: Always
 
@@ -9,9 +9,9 @@ service:
   type: ClusterIP
   port: 80
   targetPort: 5000
-  name: efk-demo-service-b
+  name: flask-webA
 
 app:
-  name: efk-demo-app-b
-
+  name: flask-webA
+  
 resources: {}
