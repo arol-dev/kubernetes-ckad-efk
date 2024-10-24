@@ -8,129 +8,102 @@ Este laboratorio tiene como objetivo configurar un entorno de monitoreo y análi
   
 - **Kube-state-metrics**: Genera métricas sobre el estado de los objetos de Kubernetes (como pods, deployments, etc.), proporcionando visibilidad sobre la salud y el estado de los recursos del clúster.
 
-- **Elasticsearch**: Almacena y busca datos de logs de manera eficiente. Permite realizar análisis en tiempo real y almacenar grandes volúmenes de datos.
+- **Elasticsearch**: Almacena y busca datos de logs de manera eficiente. Permite realizar análisis en tiempo real y almacenar grandes volúmenes de datos. Es el motor de búsqueda y análisis encargado de almacenar y analizar los logs.
 
 - **Fluentd**: Un colector de logs que envía datos a Elasticsearch. Facilita la recopilación y transformación de logs desde múltiples fuentes.
 
 - **Kibana**: Una interfaz gráfica para visualizar y analizar los datos almacenados en Elasticsearch. Permite crear dashboards y visualizaciones personalizadas.
 
-- **Metricbeat**: Un agente que recolecta métricas del sistema y de los servicios que se ejecutan en el clúster de Kubernetes. Envía esta información a Elasticsearch para su análisis.
+- **Metricbeat**: Es un agente ligero que recopila métricas de los nodos y las aplicaciones en Kubernetes y las envía a Elasticsearch para su análisis.
 
 ## Requisitos Previos
-- Tener instalado Minikube.
-- Tener instalado Helm en tu sistema.
+- Minikube instalado.
+- Helm instalado.
+- Kubernetes configurado.
 
-## Paso 1: Instalación de Service Metrics y Kube-state-metrics
+## Paso 1: Instalación de Service Metrics y Kube-state-metrics con Helm
 
 ### Instalación
-1. **Agregar el repositorio de charts**:
-   ```bash
-   helm repo add kube-state-metrics https://kubernetes.github.io/kube-state-metrics
-   helm repo update
-   ```
 
-2. **Instalar kube-state-metrics**:
+1. **Instalar `metrics-server`**:
    ```bash
-   helm install kube-state-metrics kube-state-metrics/kube-state-metrics
-   ```
-
-3. **Agregar el repositorio de metrics-server**:
-   ```bash
-   helm repo add metrics-server https://kubernetes-sigs.github.io/metrics-server
-   ```
-
-4. **Instalar metrics-server**:
-   ```bash
+   helm repo add metrics-server https://kubernetes-sigs.github.io/metrics-server/
    helm install metrics-server metrics-server/metrics-server
    ```
 
-### Verificación
-Verifica que las instalaciones se hayan realizado correctamente:
+2. **Instalar `kube-state-metrics`**:
+   ```bash
+   helm repo add kube-state-metrics https://kubernetes.github.io/kube-state-metrics
+   helm install kube-state-metrics kube-state-metrics/kube-state-metrics
+   ```
+
+Verifica que los pods estén corriendo:
 ```bash
 kubectl get pods -n kube-system
 ```
 
-## Paso 2: Instalación del Stack EFK
+## Paso 2: Instalación Declarativa del Stack EFK
 
 ### Crear Namespace
-Crea un namespace para Elastic:
+Crea un namespace por el Stack EFK:
 ```bash
 kubectl create namespace elastic
 ```
 
 ### Instalaciones
 1. **Instalar Elasticsearch**:
-   ```yaml
-   # elasticsearch.yaml
-   apiVersion: helm.sh/v3
-   kind: HelmRelease
-   metadata:
-     name: elasticsearch
-     namespace: elastic
-   spec:
-     releaseName: elasticsearch
-     chart:
-       repository: https://helm.elastic.co
-       name: elasticsearch
-       version: 7.12.0
+
+   Aplica el manifiesto `elasticsearch-statefulset.yaml`:
+   ```bash
+   kubectl apply -f elasticsearch-statefulset.yaml
    ```
 
 2. **Instalar Fluentd**:
-   ```yaml
-   # fluentd.yaml
-   apiVersion: helm.sh/v3
-   kind: HelmRelease
-   metadata:
-     name: fluentd
-     namespace: elastic
-   spec:
-     releaseName: fluentd
-     chart:
-       repository: https://fluent.github.io/helm-charts
-       name: fluentd
-       version: 1.0.0
+
+   Aplica el manifiesto `fluentd-daemonset.yaml`:
+   ```bash
+   kubectl apply -f fluentd-daemonset.yaml
    ```
 
 3. **Instalar Kibana**:
-   ```yaml
-   # kibana.yaml
-   apiVersion: helm.sh/v3
-   kind: HelmRelease
-   metadata:
-     name: kibana
-     namespace: elastic
-   spec:
-     releaseName: kibana
-     chart:
-       repository: https://helm.elastic.co
-       name: kibana
-       version: 7.12.0
+
+   Aplica el manifiesto `kibana-deployment.yaml`:
+   ```bash
+   kubectl apply -f kibana-deployment.yaml
    ```
 
 ### Verificación
+
 Verifica que las instalaciones se hayan realizado correctamente:
 ```bash
 kubectl get pods -n elastic
 ```
 
-## Paso 3: Instalación de Metricbeat
+## Paso 3: Instalación Declarativa de Metricbeat
 
 ### Instalación
+
 Instala Metricbeat en el namespace kube-system:
-```yaml
-# metricbeat.yaml
-apiVersion: helm.sh/v3
-kind: HelmRelease
-metadata:
-  name: metricbeat
-  namespace: kube-system
-spec:
-  releaseName: metricbeat
-  chart:
-    repository: https://helm.elastic.co
-    name: metricbeat
-    version: 7.12.0
+Aplica el manifiesto `metricbeat-daemonset.yaml`:
+   ```bash
+   kubectl apply -f metricbeat-daemonset.yaml
+   ```
+
+### Verificación
+Verifica que la instalación se haya realizado correctamente:
+```bash
+kubectl get pods -n kube-system
 ```
+
+## Paso 4: Instalación de la Aplicación Fluck con Helm
+
+### Instalación
+
+Instala Metricbeat en el namespace kube-system:
+Aplica el manifiesto `metricbeat-daemonset.yaml`:
+   ```bash
+   kubectl apply -f metricbeat-daemonset.yaml
+   ```
 
 ### Verificación
 Verifica que la instalación se haya realizado correctamente:
