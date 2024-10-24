@@ -54,7 +54,7 @@ data:
                 #  metricsets:
                 #    - event
         - type: kubernetes
-          node: minikube
+          node: ${NODE_NAME}
           hints.enabled: true
 
     processors:
@@ -112,8 +112,8 @@ data:
         - container
         - volume
       period: 10s
-      host: minikube
-      hosts: ["https://minikube:10250"]
+      host: ${NODE_NAME}
+      hosts: ["https://localhost:10250"]
       bearer_token_file: /var/run/secrets/kubernetes.io/serviceaccount/token
       ssl.verification_mode: "none"
       # If there is a CA bundle that contains the issuer of the certificate used in the Kubelet API,
