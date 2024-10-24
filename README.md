@@ -28,7 +28,7 @@ Este laboratorio tiene como objetivo configurar un entorno de monitoreo y análi
 1. **Instalar `metrics-server`**:
    ```bash
    helm repo add metrics-server https://kubernetes-sigs.github.io/metrics-server/
-   helm install metrics-server metrics-server/metrics-server -n kube-system
+   helm install metrics-server metrics-server/metrics-server -n kube-system --set args={--kubelet-insecure-tls}
    ```
 
 2. **Instalar `kube-state-metrics`**:
@@ -40,13 +40,18 @@ Este laboratorio tiene como objetivo configurar un entorno de monitoreo y análi
 
 Verifica que los pods estén corriendo:
 ```bash
-kubectl get pods -n kube-system
+kubectl get all -n kube-system
 ```
 
 ## Paso 2: Instalación de la Aplicación Flask con Helm
 
-### Instalación
+### Crear Namespace
+Crea un namespace por el Stack EFK:
+```bash
+kubectl create namespace elastic
+```
 
+### Instalación
 Instala la aplicación Flask en el namespace `elastic` con Helm:
 
    ```bash
@@ -56,16 +61,10 @@ Instala la aplicación Flask en el namespace `elastic` con Helm:
 ### Verificación
 Verifica que la instalación se haya realizado correctamente:
 ```bash
-kubectl get pods -n elastic
+kubectl get all -n elastic
 ```
 
 ## Paso 3: Instalación Declarativa del Stack EFK
-
-### Crear Namespace
-Crea un namespace por el Stack EFK:
-```bash
-kubectl create namespace elastic
-```
 
 ### Instalaciones
 1. **Instalar Elasticsearch**:
@@ -129,6 +128,8 @@ Abre un navegador y dirígete a: [http://localhost:5601](http://localhost:5601)
 2. En **Kibana/Index Patterns**, crea dos index patterns:
    - `fluentd*`
    - `metricbeat*`
+3. Seleciona `@timestamp` como `Time Field`.
+
 
 ## Paso 6: Visualización y Dashboard en Kibana
 
@@ -138,7 +139,7 @@ Abre un navegador y dirígete a: [http://localhost:5601](http://localhost:5601)
 4. Para ver más logs, abre un port-forwarding al servidor Flask:
 
    ```bash
-   kubectl port-forward svc/flask-webA 5000:5000 -n elastic
+   kubectl port-forward svc/flask-web-a 80:80 -n elastic
    ```
 
 5. Realiza unas solicitudes HTTP al servidor Flask y verifica en Kibana cómo los logs se registran automáticamente.

@@ -108,7 +108,7 @@ metadata:
   name: fluentd
 rules:
 - apiGroups: [""]
-  resources: ["*"]
+  resources: ["pods", "namespaces"]
   verbs: ["get", "list", "watch"]
 
 ---
