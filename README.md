@@ -36,6 +36,7 @@ Este laboratorio tiene como objetivo configurar un entorno de monitoreo y análi
    helm repo add kube-state-metrics https://kubernetes.github.io/kube-state-metrics
    helm install kube-state-metrics kube-state-metrics/kube-state-metrics
    ```
+### Verificación
 
 Verifica que los pods estén corriendo:
 ```bash
