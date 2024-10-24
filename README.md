@@ -144,28 +144,46 @@ Abre un navegador y dirígete a: [http://localhost:5601](http://localhost:5601)
 
 ### Visualizaciones
 1. Crea una visualización de tipo **TSVB**:
-   - Selecciona **Visualize** en el menú.
+   - En el menú principal, sección Kibana, selecciona **Visualize**.
    - Escoge **TSVB** y configura los datos.
+
+   ![TSVB Panel Options](assets/images/TSVB_1.PNG)
+
+   ![TSVB Data](assets/images/TSVB_2.PNG)
+
    - Dale un nombre y guárdala.
 
 2. Crea una visualización de tipo **Metric**:
-   - Selecciona **Visualize** en el menú.
+   - En el menú principal, sección Kibana, selecciona **Visualize**.
    - Escoge **Metric** y configura los datos.
+
+   ![Metric Count por Namespace](assets/images/Count_log_entries_namespace.PNG)
+
    - Dale un nombre y guárdala.
 
-1. Crea una visualización de tipo **TSVB**:
-   - Selecciona **Visualize** en el menú.
-   - Escoge **TSVB** y configura los datos.
+3. Crea una visualización de tipo **Metric**:
+   - En el menú principal, sección Kibana, selecciona **Visualize**.
+   - Escoge **Metric** y configura los datos.
+   
+   ![Metric Count por Pod](assets/images/Count_log_entries_pod.PNG)
+
    - Dale un nombre y guárdala.
 
-2. Crea una visualización de tipo **Metric**:
-   - Selecciona **Visualize** en el menú.
-   - Escoge **Metric** y configura los datos.
+4. Crea una visualización de tipo **Controls**:
+   - En el menú principal, sección Kibana, selecciona **Visualize**.
+   - Escoge **Controls** y configura los datos.
+   
+   ![Controls Namespace options-list](assets/images/namespace_option_list.PNG)
+
    - Dale un nombre y guárdala.
 
 ### Crear Dashboard
 1. Ve a la sección **Dashboards** en Kibana.
-2. Agrega las visualizaciones creadas anteriormente.
+2. Agrega las visualizaciones creadas anteriormente para crear los siguientes dos dashboards: 
+
+![Dashboard1](assets/images/dashboard1.PNG)
+![Dashboard2](assets/images/dashboard2.PNG)
+
 3. Dale un nombre al dashboard y guárdalo.
 
 ## Conclusión
