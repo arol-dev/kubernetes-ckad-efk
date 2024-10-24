@@ -153,6 +153,16 @@ Abre un navegador y dirígete a: [http://localhost:5601](http://localhost:5601)
    - Escoge **Metric** y configura los datos.
    - Dale un nombre y guárdala.
 
+1. Crea una visualización de tipo **TSVB**:
+   - Selecciona **Visualize** en el menú.
+   - Escoge **TSVB** y configura los datos.
+   - Dale un nombre y guárdala.
+
+2. Crea una visualización de tipo **Metric**:
+   - Selecciona **Visualize** en el menú.
+   - Escoge **Metric** y configura los datos.
+   - Dale un nombre y guárdala.
+
 ### Crear Dashboard
 1. Ve a la sección **Dashboards** en Kibana.
 2. Agrega las visualizaciones creadas anteriormente.
