@@ -28,13 +28,13 @@ Este laboratorio tiene como objetivo configurar un entorno de monitoreo y análi
 1. **Instalar `metrics-server`**:
    ```bash
    helm repo add metrics-server https://kubernetes-sigs.github.io/metrics-server/
-   helm install metrics-server metrics-server/metrics-server
+   helm install metrics-server metrics-server/metrics-server -n kube-system
    ```
 
 2. **Instalar `kube-state-metrics`**:
    ```bash
    helm repo add kube-state-metrics https://kubernetes.github.io/kube-state-metrics
-   helm install kube-state-metrics kube-state-metrics/kube-state-metrics
+   helm install kube-state-metrics kube-state-metrics/kube-state-metrics -n kube-system
    ```
 ### Verificación
 
