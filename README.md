@@ -137,7 +137,7 @@ Abre un navegador y dirígete a: [http://localhost:5601](http://localhost:5601)
 4. Para ver más logs, abre un port-forwarding al servidor Flask:
 
    ```bash
-   kubectl port-forward svc/flask 5000:5000 -n elastic
+   kubectl port-forward svc/flask-webA 5000:5000 -n elastic
    ```
 
 5. Realiza unas solicitudes HTTP al servidor Flask y verifica en Kibana cómo los logs se registran automáticamente.
@@ -194,4 +194,3 @@ Con estos pasos, has configurado un entorno completo de monitoreo y análisis de
 - [Documentación de Fluentd](https://www.fluentd.org/docs/)
 - [Documentación de Kibana](https://www.elastic.co/guide/en/kibana/current/index.html)
 - [Documentación de Metricbeat](https://www.elastic.co/guide/en/beats/metricbeat/current/index.html)
-```
