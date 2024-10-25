@@ -95,6 +95,8 @@ Verifica que las instalaciones se hayan realizado correctamente:
 kubectl get pods -n elastic
 ```
 
+Los Pods pueden tardar unos minutos en desplegarse por completo.
+
 ## Paso 4: Instalación Declarativa de Metricbeat
 
 ### Instalación
@@ -126,15 +128,16 @@ Abre un navegador y dirígete a: [http://localhost:5601](http://localhost:5601)
 
 1. Desde el menú principal en la parte superior izquierda, dirígete a **Stack Management** en Kibana.
 2. En **Kibana/Index Patterns**, crea dos index patterns:
-   - `fluentd*`
+   - `kube-system*`
+   - `elastic*`
    - `metricbeat*`
 3. Seleciona `@timestamp` como `Time Field`.
-
 
 ## Paso 6: Visualización y Dashboard en Kibana
 
 ### Logs Discovery
 1. En el menú principal, ve a **Discover**.
+2. Seleciona `elastic*`, como `Change index pattern`. 
 2. Agrega un filtro para `kubernetes.pod_name` igual a `<nombre del pod aplicación Flask>`. Desplegado en el paso 2.
 4. Para ver más logs, abre un port-forwarding al servidor Flask:
 
