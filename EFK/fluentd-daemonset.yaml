@@ -29,16 +29,6 @@ data:
         pattern ^elastic$
         tag elastic.*
       </rule>
-      <rule>
-        key $.kubernetes.namespace_name
-        pattern ^kube-system$
-        tag kube-system.metrics.*
-      </rule>
-      <rule>
-        key $.kubernetes.namespace_name
-        pattern ^.*$
-        tag discard.*
-      </rule>
     </match>
 
     # Send logs from 'elastic' namespace to Elasticsearch
@@ -57,8 +47,8 @@ data:
       num_threads 1
     </match>
 
-    # Handle kube-system metrics
-    <match kube-system.metrics.**>
+    # Handle kubernetes metrics
+    <match kubernetes.**>
       @type elasticsearch
       host "elasticsearch"
       port 9200
@@ -71,11 +61,6 @@ data:
       max_retry_wait 30
       disable_retry_limit
       num_threads 1
-    </match>
-
-    # Discard logs from other namespaces
-    <match discard.**>
-      @type null
     </match>
 
 ---
