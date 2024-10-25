@@ -21,17 +21,23 @@ data:
       @type kubernetes_metadata
     </filter>
 
-    # Filter logs only from 'elastic' namespace
+    # Filter logs only from 'elastic' namespace and retag them to 'elastic.*' to create a copy
     <match kubernetes.**>
-      @type rewrite_tag_filter
-      <rule>
-        key $.kubernetes.namespace_name
-        pattern ^elastic$
-        tag elastic.*
-      </rule>
+      @type copy
+      <store>
+        @type rewrite_tag_filter
+        <rule>
+          key $.kubernetes.namespace_name
+          pattern ^elastic$
+          tag elastic.*
+        </rule>
+      </store>
+      <store>
+        @type stdout
+      </store>
     </match>
 
-    # Send logs from 'elastic' namespace to Elasticsearch
+    # Send logs from 'elastic' namespace to Elasticsearch index 'elastic-logs'
     <match elastic.**>
       @type elasticsearch
       host "elasticsearch"
@@ -47,7 +53,7 @@ data:
       num_threads 1
     </match>
 
-    # Handle kubernetes metrics
+    # Send all Kubernetes logs, including elastic, to the 'fluentd' index
     <match kubernetes.**>
       @type elasticsearch
       host "elasticsearch"
