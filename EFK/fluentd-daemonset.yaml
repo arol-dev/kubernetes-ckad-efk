@@ -5,6 +5,7 @@ metadata:
   namespace: elastic
 data:
   fluent.conf: |
+    # Source for all container logs
     <source>
       @type tail
       path /var/log/containers/*.log
@@ -14,15 +15,39 @@ data:
       time_key time
       time_format %Y-%m-%dT%H:%M:%S.%NZ
     </source>
+
+    # Kubernetes metadata enrichment
     <filter kubernetes.**>
       @type kubernetes_metadata
     </filter>
+
+    # Filter logs only from 'elastic' namespace
     <match kubernetes.**>
+      @type rewrite_tag_filter
+      <rule>
+        key $.kubernetes.namespace_name
+        pattern ^elastic$
+        tag elastic.*
+      </rule>
+      <rule>
+        key $.kubernetes.namespace_name
+        pattern ^kube-system$
+        tag kube-system.metrics.*
+      </rule>
+      <rule>
+        key $.kubernetes.namespace_name
+        pattern ^.*$
+        tag discard.*
+      </rule>
+    </match>
+
+    # Send logs from 'elastic' namespace to Elasticsearch
+    <match elastic.**>
       @type elasticsearch
       host "elasticsearch"
       port 9200
       logstash_format true
-      logstash_prefix fluentd
+      logstash_prefix elastic-logs
       logstash_dateformat %Y.%m.%d
       buffer_chunk_limit 2M
       buffer_queue_limit 8
@@ -32,8 +57,29 @@ data:
       num_threads 1
     </match>
 
----
+    # Handle kube-system metrics
+    <match kube-system.metrics.**>
+      @type elasticsearch
+      host "elasticsearch"
+      port 9200
+      logstash_format true
+      logstash_prefix kube-system-metrics
+      logstash_dateformat %Y.%m.%d
+      buffer_chunk_limit 2M
+      buffer_queue_limit 8
+      flush_interval 5s
+      max_retry_wait 30
+      disable_retry_limit
+      num_threads 1
+    </match>
 
+    # Discard logs from other namespaces
+    <match discard.**>
+      @type null
+    </match>
+
+---
+# DaemonSet for Fluentd
 apiVersion: apps/v1
 kind: DaemonSet
 metadata:
@@ -93,7 +139,7 @@ spec:
           name: fluentd-config
 
 ---
-
+# Service Account for Fluentd
 apiVersion: v1
 kind: ServiceAccount
 metadata:
@@ -101,7 +147,7 @@ metadata:
   namespace: elastic
 
 ---
-
+# RBAC permissions for Fluentd
 apiVersion: rbac.authorization.k8s.io/v1
 kind: ClusterRole
 metadata:
@@ -112,7 +158,7 @@ rules:
   verbs: ["get", "list", "watch"]
 
 ---
-
+# ClusterRoleBinding for Fluentd
 apiVersion: rbac.authorization.k8s.io/v1
 kind: ClusterRoleBinding
 metadata:
