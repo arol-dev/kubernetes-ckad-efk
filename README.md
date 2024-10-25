@@ -128,7 +128,7 @@ Abre un navegador y dirígete a: [http://localhost:5601](http://localhost:5601)
 
 1. Desde el menú principal en la parte superior izquierda, dirígete a **Stack Management** en Kibana.
 2. En **Kibana/Index Patterns**, crea dos index patterns:
-   - `kube-system*`
+   - `fluentd*`
    - `elastic*`
    - `metricbeat*`
 3. Seleciona `@timestamp` como `Time Field`.

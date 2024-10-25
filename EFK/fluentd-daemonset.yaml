@@ -63,7 +63,7 @@ data:
       host "elasticsearch"
       port 9200
       logstash_format true
-      logstash_prefix kube-system-metrics
+      logstash_prefix fluentd
       logstash_dateformat %Y.%m.%d
       buffer_chunk_limit 2M
       buffer_queue_limit 8
