@@ -3,6 +3,8 @@
 ## Introducción
 Este laboratorio tiene como objetivo configurar un entorno de monitoreo y análisis de logs utilizando el stack EFK (Elasticsearch, Fluentd, Kibana) en un clúster de Minikube. Además, se utilizará Metricbeat para la recolección de métricas del clúster.
 
+![STACK EFK](assets/images/eschema%20grafico.PNG)
+
 ### Descripción de Componentes
 - **Service Metrics**: Proporciona métricas sobre los servicios en el clúster de Kubernetes, permitiendo a los administradores monitorear el rendimiento y el estado de los servicios.
   
