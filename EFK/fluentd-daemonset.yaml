@@ -21,10 +21,10 @@ data:
       @type kubernetes_metadata
     </filter>
 
-    # Filter logs only from 'elastic' namespace and retag them to 'elastic.*' to create a copy
+    # Duplicate logs from 'elastic' namespace to both elastic-logs and fluentd indexes
     <match kubernetes.**>
       @type copy
-      <store>
+      <store>  # Send logs from 'elastic' namespace to a dedicated 'elastic-logs' index
         @type rewrite_tag_filter
         <rule>
           key $.kubernetes.namespace_name
@@ -32,8 +32,19 @@ data:
           tag elastic.*
         </rule>
       </store>
-      <store>
-        @type stdout
+      <store>  # Store all logs in the 'fluentd' index, including 'elastic'
+        @type elasticsearch
+        host "elasticsearch"
+        port 9200
+        logstash_format true
+        logstash_prefix fluentd
+        logstash_dateformat %Y.%m.%d
+        buffer_chunk_limit 2M
+        buffer_queue_limit 8
+        flush_interval 5s
+        max_retry_wait 30
+        disable_retry_limit
+        num_threads 1
       </store>
     </match>
 
