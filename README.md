@@ -188,10 +188,7 @@ Abre un navegador y dirígete a: [http://localhost:5601](http://localhost:5601)
 
 3. Dale un nombre al dashboard y guárdalo.
 
-## Conclusión
-Con estos pasos, has configurado un entorno completo de monitoreo y análisis de logs en Kubernetes utilizando el stack EFK y Metricbeat. Ahora puedes monitorear el rendimiento de tus aplicaciones y analizar los logs generados en el clúster.
-
-## Recursos Adicionales
+## Links
 - [Documentación de Elasticsearch](https://www.elastic.co/guide/en/elasticsearch/reference/current/index.html)
 - [Documentación de Fluentd](https://www.fluentd.org/docs/)
 - [Documentación de Kibana](https://www.elastic.co/guide/en/kibana/current/index.html)
